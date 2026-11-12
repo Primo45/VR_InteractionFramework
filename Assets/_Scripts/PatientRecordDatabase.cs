@@ -2,8 +2,9 @@ using UnityEngine;
 
 /// <summary>
 /// Stores the 30 simulated patient medical records (HT01-HT10, DL01-DL10, P01-P10) in English.
-/// Exposes only the player-facing history and excludes physical exam measurements,
-/// lab results, diagnoses, ping-pong color answers, and advice.
+/// - Scene 4 uses FormatPlayerHistory() (history only, excludes measurements/labs/answers).
+/// - Scene 6 uses FormatPlayerHistoryWithMeasurements() (same info + Physical Exam & Lab Results).
+/// - CorrectColor stores เฉลยสีปิงปอง for jar evaluation in Scene 6.
 /// </summary>
 public static class PatientRecordDatabase
 {
@@ -19,6 +20,8 @@ public static class PatientRecordDatabase
         public string FamilyHistory;
         public string BehaviorAndSocial;
         public string CurrentMedications;
+        public string PhysicalExamAndLabs;
+        public PingPongJarTrigger.JarColor CorrectColor;
 
         public string FormatPlayerHistory()
         {
@@ -31,6 +34,14 @@ public static class PatientRecordDatabase
                 $"<b>• Family History:</b> {FamilyHistory}\n" +
                 $"<b>• Lifestyle & Social:</b> {BehaviorAndSocial}\n" +
                 $"<b>• Current Medications:</b> {CurrentMedications}";
+        }
+
+        public string FormatPlayerHistoryWithMeasurements()
+        {
+            return
+                FormatPlayerHistory() +
+                $"\n\n<b>[ PHYSICAL EXAM & LAB RESULTS ]</b>\n" +
+                PhysicalExamAndLabs;
         }
     }
 
@@ -50,7 +61,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "No underlying diseases and has never taken antihypertensive medication.",
             FamilyHistory = "Father developed hypertension after age 60.",
             BehaviorAndSocial = "Accountant; brisk walking 30 minutes 5 days/week, eats home-cooked meals, non-smoker, does not drink alcohol.",
-            CurrentMedications = "No regular medications."
+            CurrentMedications = "No regular medications.",
+            PhysicalExamAndLabs = "Height: 170 cm  |  Weight: 62 kg  |  BMI: 21.5 (Normal)\nBlood Pressure (Avg): 112/72 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.White
         },
         new PatientRecord
         {
@@ -63,7 +76,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Never diagnosed with hypertension.",
             FamilyHistory = "Mother has hypertension and type 2 diabetes.",
             BehaviorAndSocial = "Works long hours at a computer, frequently drinks bubble tea and eats fried food, minimal exercise, non-smoker.",
-            CurrentMedications = "No regular medications."
+            CurrentMedications = "No regular medications.",
+            PhysicalExamAndLabs = "Height: 158 cm  |  Weight: 66 kg  |  BMI: 26.4 (Obesity Class I)\nBlood Pressure (Avg): 132/84 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.LightGreen
         },
         new PatientRecord
         {
@@ -76,7 +91,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Hypertension with no known complications.",
             FamilyHistory = "Older brother has hypertension.",
             BehaviorAndSocial = "Commercial driver; cycles regularly, quit smoking 5 years ago, rarely drinks alcohol.",
-            CurrentMedications = "Prescribed antihypertensive medication."
+            CurrentMedications = "Prescribed antihypertensive medication.",
+            PhysicalExamAndLabs = "Height: 172 cm  |  Weight: 71 kg  |  BMI: 24.0 (Overweight)\nBlood Pressure (Avg): 128/78 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.DarkGreen
         },
         new PatientRecord
         {
@@ -89,7 +106,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Never diagnosed with hypertension.",
             FamilyHistory = "Mother has hypertension and hyperlipidemia.",
             BehaviorAndSocial = "Food vendor; frequently tastes food and uses salty seasonings, rarely exercises, gets little sleep.",
-            CurrentMedications = "No regular medications."
+            CurrentMedications = "No regular medications.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 75 kg  |  BMI: 29.3 (Obesity Class I)\nBlood Pressure (Avg): 148/94 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.Yellow
         },
         new PatientRecord
         {
@@ -102,7 +121,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Hypertension and obesity; no confirmed complications.",
             FamilyHistory = "Father passed away from stroke.",
             BehaviorAndSocial = "Frequently eats instant noodles and fried food, smokes 8-10 cigarettes/day, drinks beer on weekends.",
-            CurrentMedications = "Prescribed antihypertensive medication, taken irregularly."
+            CurrentMedications = "Prescribed antihypertensive medication, taken irregularly.",
+            PhysicalExamAndLabs = "Height: 168 cm  |  Weight: 87.5 kg  |  BMI: 31.0 (Obesity Class II)\nBlood Pressure (Avg): 166/104 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.Orange
         },
         new PatientRecord
         {
@@ -115,7 +136,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Hypertension, dyslipidemia, and obesity; no confirmed end-organ complications.",
             FamilyHistory = "Mother had a history of stroke.",
             BehaviorAndSocial = "Market vendor; prefers pickled/fermented foods and coconut-milk curries, does not exercise, sleeps poorly.",
-            CurrentMedications = "Antihypertensive and lipid-lowering medications, intermittently self-discontinued."
+            CurrentMedications = "Antihypertensive and lipid-lowering medications, intermittently self-discontinued.",
+            PhysicalExamAndLabs = "Height: 155 cm  |  Weight: 79 kg  |  BMI: 32.9 (Obesity Class II)\nBlood Pressure (Avg): 184/114 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.Red
         },
         new PatientRecord
         {
@@ -128,7 +151,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Hypertension, diabetes, and ischemic stroke.",
             FamilyHistory = "Father had hypertension.",
             BehaviorAndSocial = "Lives with wife who helps organize medications; quit smoking after the stroke.",
-            CurrentMedications = "Antihypertensive medication and secondary stroke prevention regimen."
+            CurrentMedications = "Antihypertensive medication and secondary stroke prevention regimen.",
+            PhysicalExamAndLabs = "Height: 165 cm  |  Weight: 75 kg  |  BMI: 27.5 (Obesity Class I)\nBlood Pressure (Avg): 172/102 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.Black
         },
         new PatientRecord
         {
@@ -141,7 +166,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Never diagnosed with hypertension.",
             FamilyHistory = "Father has hypertension.",
             BehaviorAndSocial = "Designer; long screen hours, drinks sweetened coffee daily, non-smoker.",
-            CurrentMedications = "No regular medications."
+            CurrentMedications = "No regular medications.",
+            PhysicalExamAndLabs = "Height: 162 cm  |  Weight: 72 kg  |  BMI: 27.4 (Obesity Class I)\nBlood Pressure (Avg): 126/82 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.LightGreen
         },
         new PatientRecord
         {
@@ -154,7 +181,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Hypertension; no major comorbidities or confirmed complications.",
             FamilyHistory = "Older sister has hypertension.",
             BehaviorAndSocial = "Retired teacher; walks in the garden every morning, cooks at home, reduces fish sauce and processed food, non-smoker.",
-            CurrentMedications = "Prescribed antihypertensive medication, taken regularly."
+            CurrentMedications = "Prescribed antihypertensive medication, taken regularly.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 64 kg  |  BMI: 25.0 (Obesity Class I)\nBlood Pressure (Avg): 134/86 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.DarkGreen
         },
         new PatientRecord
         {
@@ -167,7 +196,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Hypertension, chronic kidney disease, and dyslipidemia.",
             FamilyHistory = "Mother had chronic kidney disease with hypertension.",
             BehaviorAndSocial = "Gardener; frequently eats pickled/fermented foods, former smoker (quit), wife helps manage medications.",
-            CurrentMedications = "Antihypertensive medication and renal care regimen."
+            CurrentMedications = "Antihypertensive medication and renal care regimen.",
+            PhysicalExamAndLabs = "Height: 170 cm  |  Weight: 72 kg  |  BMI: 24.9 (Overweight)\nBlood Pressure (Avg): 158/96 mmHg",
+            CorrectColor = PingPongJarTrigger.JarColor.Black
         },
 
         // ================= Dyslipidemia Cases (DL01 - DL10) =================
@@ -182,7 +213,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "No diabetes, hypertension, or cardiovascular disease.",
             FamilyHistory = "No premature heart disease in first-degree relatives.",
             BehaviorAndSocial = "Engineer; runs 3-4 days/week, eats a varied diet, drinks alcohol rarely.",
-            CurrentMedications = "No regular medications."
+            CurrentMedications = "No regular medications.",
+            PhysicalExamAndLabs = "Height: 175 cm  |  Weight: 66 kg  |  BMI: 21.6 kg/m² (Normal)\nLipid Profile: TC 165 | LDL-C 88 (calc) | HDL-C 55 | TG 110 | Non-HDL-C 110 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.White
         },
         new PatientRecord
         {
@@ -195,7 +228,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Never diagnosed with dyslipidemia.",
             FamilyHistory = "Mother has type 2 diabetes and hyperlipidemia.",
             BehaviorAndSocial = "Computer-based office work, rarely exercises, non-smoker.",
-            CurrentMedications = "No lipid-lowering medications."
+            CurrentMedications = "No lipid-lowering medications.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 59 kg  |  BMI: 23.0 kg/m² (Overweight)\nLipid Profile: TC 208 | LDL-C 124 (calc) | HDL-C 47 | TG 185 | Non-HDL-C 161 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.LightGreen
         },
         new PatientRecord
         {
@@ -208,7 +243,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Dyslipidemia; no cardiovascular disease.",
             FamilyHistory = "Older brother has hyperlipidemia.",
             BehaviorAndSocial = "Cycles 30 minutes 5 days/week; former smoker (quit).",
-            CurrentMedications = "Prescribed lipid-lowering medication."
+            CurrentMedications = "Prescribed lipid-lowering medication.",
+            PhysicalExamAndLabs = "Height: 172 cm  |  Weight: 71 kg  |  BMI: 24.0 kg/m² (Overweight)\nLipid Profile: TC 150 | LDL-C 76 (calc) | HDL-C 50 | TG 120 | Non-HDL-C 100 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.DarkGreen
         },
         new PatientRecord
         {
@@ -221,7 +258,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "No known cardiovascular disease.",
             FamilyHistory = "Mother has hyperlipidemia.",
             BehaviorAndSocial = "Food vendor; frequently tastes fried foods and coconut-milk dishes, rarely exercises.",
-            CurrentMedications = "None."
+            CurrentMedications = "None.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 69 kg  |  BMI: 27.0 kg/m² (Obesity Class I)\nLipid Profile: TC 232 | LDL-C 152 (calc) | HDL-C 44 | TG 180 | Non-HDL-C 188 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.Yellow
         },
         new PatientRecord
         {
@@ -234,7 +273,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Dyslipidemia and obesity; no confirmed complications.",
             FamilyHistory = "Father had a stroke at age 62.",
             BehaviorAndSocial = "Eats convenience/processed foods and fried items, smokes 8-10 cigarettes/day.",
-            CurrentMedications = "Prescribed lipid-lowering medication, used inconsistently."
+            CurrentMedications = "Prescribed lipid-lowering medication, used inconsistently.",
+            PhysicalExamAndLabs = "Height: 168 cm  |  Weight: 88 kg  |  BMI: 31.2 kg/m² (Obesity Class II)\nLipid Profile: TC 265 | LDL-C 178 (calc) | HDL-C 38 | TG 245 | Non-HDL-C 227 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.Orange
         },
         new PatientRecord
         {
@@ -247,7 +288,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Dyslipidemia and obesity; no confirmed heart disease, stroke, or pancreatitis.",
             FamilyHistory = "Mother had a history of stroke.",
             BehaviorAndSocial = "Does not exercise, non-smoker, drinks alcohol rarely.",
-            CurrentMedications = "Prescribed lipid-lowering medication, intermittently self-discontinued."
+            CurrentMedications = "Prescribed lipid-lowering medication, intermittently self-discontinued.",
+            PhysicalExamAndLabs = "Height: 155 cm  |  Weight: 79 kg  |  BMI: 32.9 kg/m² (Obesity Class II)\nLipid Profile: TC 345 | LDL-C 215 (direct) | HDL-C 32 | TG 500 | Non-HDL-C 313 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.Red
         },
         new PatientRecord
         {
@@ -260,7 +303,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Dyslipidemia, hypertension, and ischemic stroke.",
             FamilyHistory = "Father passed away from heart disease.",
             BehaviorAndSocial = "Quit smoking after the stroke and tries to reduce salty and fatty foods.",
-            CurrentMedications = "Prescribed lipid-lowering and vascular protective medications."
+            CurrentMedications = "Prescribed lipid-lowering and vascular protective medications.",
+            PhysicalExamAndLabs = "Height: 165 cm  |  Weight: 75 kg  |  BMI: 27.5 kg/m² (Obesity Class I)\nLipid Profile: TC 188 | LDL-C 108 (calc) | HDL-C 38 | TG 210 | Non-HDL-C 150 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.Black
         },
         new PatientRecord
         {
@@ -273,7 +318,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Never diagnosed with dyslipidemia.",
             FamilyHistory = "Father has hyperlipidemia.",
             BehaviorAndSocial = "Long screen hours, drinks sweetened coffee daily, non-smoker.",
-            CurrentMedications = "None."
+            CurrentMedications = "None.",
+            PhysicalExamAndLabs = "Height: 162 cm  |  Weight: 72 kg  |  BMI: 27.4 kg/m² (Obesity Class I)\nLipid Profile: TC 205 | LDL-C 128 (calc) | HDL-C 44 | TG 165 | Non-HDL-C 161 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.LightGreen
         },
         new PatientRecord
         {
@@ -286,7 +333,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Dyslipidemia and type 2 diabetes; no confirmed ASCVD.",
             FamilyHistory = "Older sister has diabetes and hyperlipidemia.",
             BehaviorAndSocial = "Walks every morning, cooks at home, non-smoker, does not drink alcohol.",
-            CurrentMedications = "Prescribed lipid-lowering and diabetes medications."
+            CurrentMedications = "Prescribed lipid-lowering and diabetes medications.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 64 kg  |  BMI: 25.0 kg/m² (Obesity Class I)\nLipid Profile: TC 135 | LDL-C 62 (calc) | HDL-C 54 | TG 95 | Non-HDL-C 81 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.DarkGreen
         },
         new PatientRecord
         {
@@ -299,7 +348,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Dyslipidemia, coronary artery disease, and chronic kidney disease.",
             FamilyHistory = "Mother had heart disease and diabetes.",
             BehaviorAndSocial = "Former smoker (quit); wife helps organize medications.",
-            CurrentMedications = "Prescribed lipid-lowering and cardiac medications."
+            CurrentMedications = "Prescribed lipid-lowering and cardiac medications.",
+            PhysicalExamAndLabs = "Height: 170 cm  |  Weight: 76 kg  |  BMI: 26.3 kg/m² (Obesity Class I)\nLipid Profile: TC 182 | LDL-C 96 (calc) | HDL-C 36 | TG 250 | Non-HDL-C 146 mg/dL",
+            CorrectColor = PingPongJarTrigger.JarColor.Black
         },
 
         // ================= Diabetes Cases (P01 - P10) =================
@@ -314,7 +365,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "No underlying diseases, drug allergies, or chronic illnesses.",
             FamilyHistory = "Father developed type 2 diabetes at age 45; mother is healthy; paternal grandfather has hypertension.",
             BehaviorAndSocial = "Eats 3 balanced meals/day, occasionally has snacks and soda, plays actively with friends at school daily.",
-            CurrentMedications = "No regular medications."
+            CurrentMedications = "No regular medications.",
+            PhysicalExamAndLabs = "Height: 140 cm  |  Weight: 34 kg  |  BMI: 17.3 (Pediatric - assess by age/sex)\nBP: 110/70 mmHg  |  FBS: 80 mg/dL  |  HbA1c: 4.5%",
+            CorrectColor = PingPongJarTrigger.JarColor.White
         },
         new PatientRecord
         {
@@ -327,7 +380,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Type 1 diabetes for 2 years; no recurrent DKA or history of severe hypoglycemia.",
             FamilyHistory = "No type 1 diabetes in family; maternal grandmother has type 2 diabetes.",
             BehaviorAndSocial = "Lives with mother, follows dietitian meal plan, swims 3 times/week, checks fingerstick glucose 4 times/day.",
-            CurrentMedications = "Insulin glargine and insulin aspart as prescribed."
+            CurrentMedications = "Insulin glargine and insulin aspart as prescribed.",
+            PhysicalExamAndLabs = "Height: 150 cm  |  Weight: 43 kg  |  BMI: 19.1 (Pediatric - assess by age/sex)\nBP: 128/84 mmHg (Pediatric criteria)  |  FBS: 115 mg/dL  |  HbA1c: 5.9%",
+            CorrectColor = PingPongJarTrigger.JarColor.DarkGreen
         },
         new PatientRecord
         {
@@ -340,7 +395,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Type 2 diabetes, hypertension, ischemic stroke, CKD stage 3, dyslipidemia, and class II obesity.",
             FamilyHistory = "Father died of myocardial infarction at age 50; mother has diabetes and hypertension.",
             BehaviorAndSocial = "Smokes ~1 pack/day since age 15, drinks alcohol occasionally, factory worker, does not exercise.",
-            CurrentMedications = "Metformin, insulin glargine, enalapril, amlodipine, atorvastatin, and aspirin as prescribed."
+            CurrentMedications = "Metformin, insulin glargine, enalapril, amlodipine, atorvastatin, and aspirin as prescribed.",
+            PhysicalExamAndLabs = "Height: 170 cm  |  Weight: 88 kg  |  BMI: 30.4\nBP: 190/115 mmHg  |  FBS: 210 mg/dL  |  HbA1c: 8.1%",
+            CorrectColor = PingPongJarTrigger.JarColor.Black
         },
         new PatientRecord
         {
@@ -353,7 +410,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "No underlying diseases or prior hospitalizations.",
             FamilyHistory = "Mother and maternal aunt have type 2 diabetes.",
             BehaviorAndSocial = "Office worker, mostly sedentary, irregular exercise, often eats out, drinks alcohol socially 1-2 times/month, non-smoker.",
-            CurrentMedications = "None."
+            CurrentMedications = "None.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 56 kg  |  BMI: 21.9\nBP: 130/85 mmHg  |  FBS: 120 mg/dL  |  HbA1c: 6.3%",
+            CorrectColor = PingPongJarTrigger.JarColor.LightGreen
         },
         new PatientRecord
         {
@@ -366,7 +425,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Poorly controlled diabetes and hypertension, dyslipidemia, class II obesity, and suspected obstructive sleep apnea (unconfirmed).",
             FamilyHistory = "Father had diabetes, hypertension, and CKD before dying from ESRD at age 60.",
             BehaviorAndSocial = "Truck driver, spends most of the day sitting, eats street food, no exercise, smokes ~half pack/day.",
-            CurrentMedications = "Metformin, glibenclamide, enalapril, hydrochlorothiazide, and simvastatin as prescribed."
+            CurrentMedications = "Metformin, glibenclamide, enalapril, hydrochlorothiazide, and simvastatin as prescribed.",
+            PhysicalExamAndLabs = "Height: 172 cm  |  Weight: 89 kg  |  BMI: 30.1\nBP: 185/105 mmHg  |  FBS: 190 mg/dL  |  HbA1c: 7.8%",
+            CorrectColor = PingPongJarTrigger.JarColor.Red
         },
         new PatientRecord
         {
@@ -379,7 +440,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Type 2 diabetes, hypertension, and class I obesity.",
             FamilyHistory = "Mother has diabetes and hypertension; older sister developed diabetes at age 35.",
             BehaviorAndSocial = "Factory shift worker (alternating morning and night shifts); main diet is rice with curry; non-smoker, no alcohol.",
-            CurrentMedications = "Metformin, glipizide, and enalapril as prescribed."
+            CurrentMedications = "Metformin, glipizide, and enalapril as prescribed.",
+            PhysicalExamAndLabs = "Height: 165 cm  |  Weight: 77 kg  |  BMI: 28.3\nBP: 170/102 mmHg  |  FBS: 170 mg/dL  |  HbA1c: 7.6%",
+            CorrectColor = PingPongJarTrigger.JarColor.Orange
         },
         new PatientRecord
         {
@@ -392,7 +455,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Type 2 diabetes, hypertension, and class I obesity.",
             FamilyHistory = "Mother has diabetes and hypertension; older brother has diabetes.",
             BehaviorAndSocial = "Cooks at home reducing sugar, fat, and salt; walks 30 minutes 4-5 days/week; motivated in self-care.",
-            CurrentMedications = "Metformin and amlodipine as prescribed."
+            CurrentMedications = "Metformin and amlodipine as prescribed.",
+            PhysicalExamAndLabs = "Height: 158 cm  |  Weight: 66 kg  |  BMI: 26.4\nBP: 150/95 mmHg  |  FBS: 145 mg/dL  |  HbA1c: 6.8%",
+            CorrectColor = PingPongJarTrigger.JarColor.Yellow
         },
         new PatientRecord
         {
@@ -405,7 +470,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "No known chronic conditions.",
             FamilyHistory = "Father died of myocardial infarction at age 55; mother has hypertension; older sister has type 2 diabetes.",
             BehaviorAndSocial = "Accountant sitting 8-10 hours/day, drinks sweetened coffee every morning, no exercise, non-smoker, drinks beer 1-2 times/week.",
-            CurrentMedications = "None."
+            CurrentMedications = "None.",
+            PhysicalExamAndLabs = "Height: 175 cm  |  Weight: 73 kg  |  BMI: 23.8\nBP: 135/85 mmHg  |  FBS: 118 mg/dL  |  HbA1c: 6.1%",
+            CorrectColor = PingPongJarTrigger.JarColor.LightGreen
         },
         new PatientRecord
         {
@@ -418,7 +485,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Poorly controlled diabetes and hypertension, diabetic retinopathy, early diabetic nephropathy, class II obesity, and dyslipidemia.",
             FamilyHistory = "Mother died of diabetes-related ESRD.",
             BehaviorAndSocial = "Made-to-order food vendor tasting food throughout the day (high fat, sugar, and sodium); no time to exercise; non-smoker, no alcohol.",
-            CurrentMedications = "Metformin, insulin glargine, enalapril, amlodipine, and atorvastatin as prescribed."
+            CurrentMedications = "Metformin, insulin glargine, enalapril, amlodipine, and atorvastatin as prescribed.",
+            PhysicalExamAndLabs = "Height: 160 cm  |  Weight: 79 kg  |  BMI: 30.9\nBP: 182/108 mmHg  |  FBS: 200 mg/dL  |  HbA1c: 8.2%",
+            CorrectColor = PingPongJarTrigger.JarColor.Black
         },
         new PatientRecord
         {
@@ -431,7 +500,9 @@ public static class PatientRecordDatabase
             MedicalHistory = "Childhood obesity, early type 2 diabetes, pediatric hypertension, acanthosis nigricans, and dyslipidemia.",
             FamilyHistory = "Father has type 2 diabetes, hypertension, and obesity; mother has hypertension and overweight.",
             BehaviorAndSocial = "Family diet high in fat, sugar, and starch; drinks 1-2 cans of soda/day; no exercise; 4-5 hours/day screen time.",
-            CurrentMedications = "Metformin and amlodipine per pediatric plan."
+            CurrentMedications = "Metformin and amlodipine per pediatric plan.",
+            PhysicalExamAndLabs = "Height: 145 cm  |  Weight: 49 kg  |  BMI: 23.3 (Pediatric - assess by age/sex)\nBP: 148/96 mmHg (Pediatric criteria)  |  FBS: 140 mg/dL  |  HbA1c: 6.5%",
+            CorrectColor = PingPongJarTrigger.JarColor.Yellow
         }
     };
 
@@ -442,6 +513,18 @@ public static class PatientRecordDatabase
     {
         int index = Random.Range(0, AllPatients.Length);
         CurrentPatient = AllPatients[index];
+        return CurrentPatient;
+    }
+
+    /// <summary>
+    /// Returns CurrentPatient, or selects one randomly if none has been chosen yet.
+    /// </summary>
+    public static PatientRecord GetOrSelectCurrentPatient()
+    {
+        if (CurrentPatient == null)
+        {
+            SelectRandomPatient();
+        }
         return CurrentPatient;
     }
 }

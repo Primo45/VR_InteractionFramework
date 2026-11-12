@@ -3,9 +3,9 @@ using TMPro;
 using BNG;
 
 /// <summary>
-/// Attach to the grabbable Clipboard in Scene 4.
-/// When grabbed, pops up PatientInfoCanvas showing one random patient's
-/// player-facing medical history (excluding measurements, labs, answers, and advice).
+/// Attach to the grabbable Clipboard in Scene 4 and Scene 6.
+/// When grabbed, pops up PatientInfoCanvas showing the active patient's
+/// player-facing history (and physical exam/lab results when includeMeasurements is true).
 /// </summary>
 public class ClipboardPatientPopup : GrabbableEvents
 {
@@ -15,6 +15,13 @@ public class ClipboardPatientPopup : GrabbableEvents
 
     [Tooltip("Drag PatientData_Text (TextMeshProUGUI) here")]
     public TextMeshProUGUI patientDataText;
+
+    [Header("Content Mode")]
+    [Tooltip("False in Scene 4 (history only). True in Scene 6 (adds Physical Exam & Lab Results).")]
+    public bool includeMeasurements = false;
+
+    [Tooltip("True in Scene 4 (picks a new random patient). False in Scene 6 (reuses Scene 4's patient).")]
+    public bool selectNewRandomPatientOnStart = true;
 
     [Header("VR Camera Positioning")]
     [Tooltip("Leave empty to auto-find CenterEyeAnchor or Camera.main")]
@@ -38,8 +45,9 @@ public class ClipboardPatientPopup : GrabbableEvents
             FindVRCamera();
         }
 
-        // Pick one random patient for this scene visit
-        selectedPatient = PatientRecordDatabase.SelectRandomPatient();
+        selectedPatient = selectNewRandomPatientOnStart
+            ? PatientRecordDatabase.SelectRandomPatient()
+            : PatientRecordDatabase.GetOrSelectCurrentPatient();
 
         if (patientDataText != null)
         {
@@ -69,14 +77,11 @@ public class ClipboardPatientPopup : GrabbableEvents
     }
 
     /// <summary>
-    /// Displays the selected random patient's player-facing history on PatientInfoCanvas.
+    /// Displays the active patient's information on PatientInfoCanvas.
     /// </summary>
     public void ShowPatientPopup()
     {
-        if (selectedPatient == null)
-        {
-            selectedPatient = PatientRecordDatabase.SelectRandomPatient();
-        }
+        selectedPatient = PatientRecordDatabase.GetOrSelectCurrentPatient();
 
         if (patientDataText != null)
         {
@@ -100,11 +105,12 @@ public class ClipboardPatientPopup : GrabbableEvents
     private void ApplyPatientText()
     {
         patientDataText.alignment = TextAlignmentOptions.TopLeft;
-        patientDataText.enableAutoSizing = true;
-        patientDataText.fontSizeMin = 16f;
-        patientDataText.fontSizeMax = 28f;
-        patientDataText.lineSpacing = 6f;
-        patientDataText.text = selectedPatient.FormatPlayerHistory();
+        patientDataText.enableAutoSizing = false;
+        patientDataText.fontSize = 35f;
+        patientDataText.lineSpacing = 4f;
+        patientDataText.text = includeMeasurements
+            ? selectedPatient.FormatPlayerHistoryWithMeasurements()
+            : selectedPatient.FormatPlayerHistory();
     }
 
     private void PositionCanvasInFrontOfCamera()

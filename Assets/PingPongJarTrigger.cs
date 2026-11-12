@@ -1,48 +1,127 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+using BNG;
 
 public class PingPongJarTrigger : MonoBehaviour
 {
     public enum JarColor
     {
-        White,      // สีขาว (ปกติ)
-        LightGreen, // สีเขียวอ่อน (กลุ่มเสี่ยง)
-        DarkGreen,  // สีเขียวเข้ม (ป่วยระดับ 0)
-        Yellow,     // สีเหลือง (ป่วยระดับ 1)
-        Orange,     // สีส้ม (ป่วยระดับ 2)
-        Red,        // สีแดง (ป่วยระดับ 3)
-        Black       // สีดำ (ป่วยรุนแรง/โรคแทรกซ้อน)
+        White,      // Normal
+        LightGreen, // At Risk
+        DarkGreen,  // Stage 0 (Well Controlled)
+        Yellow,     // Stage 1 (Mild)
+        Orange,     // Stage 2 (Moderate / High)
+        Red,        // Stage 3 (Severe / Critical)
+        Black       // Complications
     }
 
-    [Header("ตั้งค่าสีของโถใบนี้")]
+    [Header("Jar Color")]
     public JarColor thisJarColor;
 
-    [Header("สีที่ถูกต้องสำหรับเคสคนไข้นี้")]
+    [Header("Fallback Answer (used if useCurrentPatientAnswer is false)")]
     public JarColor correctAnswerColor;
 
-    [Header("Event เมื่อหย่อนลูกปิงปองลงโถ")]
+    [Header("Patient Assessment")]
+    [Tooltip("Check against the active patient's ping-pong answer in PatientRecordDatabase")]
+    public bool useCurrentPatientAnswer = true;
+
+    [Tooltip("Wait until the player releases the ball inside the jar before evaluating")]
+    public bool waitUntilBallReleased = true;
+
+    [Tooltip("Automatically load ResultSuccess or ResultFail after a ball is placed in the jar")]
+    public bool loadResultScene = true;
+    public string successSceneName = "Scene_09_ResultSuccess";
+    public string failSceneName = "Scene_08_ResultFail";
+    public float sceneLoadDelay = 0.6f;
+
+    [Header("Events")]
     public UnityEvent onCorrectJar;
     public UnityEvent onWrongJar;
 
-    private bool hasTriggered = false;
+    private static bool hasEvaluatedInScene = false;
+    private static bool sceneHookRegistered = false;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        hasEvaluatedInScene = false;
+    }
+
+    private void Awake()
+    {
+        if (!sceneHookRegistered)
+        {
+            sceneHookRegistered = true;
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        hasEvaluatedInScene = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        // เช็คว่าเป็นลูกปิงปองและยังไม่เคยตรวจผลมาก่อน
-        if (!hasTriggered && other.CompareTag("PingPongBall"))
-        {
-            hasTriggered = true;
+        TryEvaluateBall(other);
+    }
 
-            if (thisJarColor == correctAnswerColor)
+    private void OnTriggerStay(Collider other)
+    {
+        TryEvaluateBall(other);
+    }
+
+    private void TryEvaluateBall(Collider other)
+    {
+        if (hasEvaluatedInScene) return;
+        if (!other.CompareTag("PingPongBall")) return;
+
+        if (waitUntilBallReleased)
+        {
+            Grabbable grabbable = other.GetComponentInParent<Grabbable>();
+            if (grabbable != null && grabbable.BeingHeld)
             {
-                Debug.Log("ถูกต้อง! หย่อนลงโถสี: " + thisJarColor);
-                onCorrectJar.Invoke();
-            }
-            else
-            {
-                Debug.Log("ผิด! หย่อนลงโถสี: " + thisJarColor + " (คำตอบที่ถูกคือ " + correctAnswerColor + ")");
-                onWrongJar.Invoke();
+                return;
             }
         }
+
+        hasEvaluatedInScene = true;
+
+        JarColor expectedColor = correctAnswerColor;
+        string patientInfo = "Manual Answer";
+
+        if (useCurrentPatientAnswer)
+        {
+            var patient = PatientRecordDatabase.GetOrSelectCurrentPatient();
+            expectedColor = patient.CorrectColor;
+            patientInfo = $"{patient.Code} ({patient.FullName})";
+        }
+
+        bool isCorrect = (thisJarColor == expectedColor);
+
+        if (isCorrect)
+        {
+            Debug.Log($"Correct! {patientInfo} -> Jar: {thisJarColor} (Expected: {expectedColor})");
+            onCorrectJar?.Invoke();
+        }
+        else
+        {
+            Debug.Log($"Wrong! {patientInfo} -> Jar: {thisJarColor} (Expected: {expectedColor})");
+            onWrongJar?.Invoke();
+        }
+
+        if (loadResultScene)
+        {
+            StartCoroutine(LoadResultSceneRoutine(isCorrect ? successSceneName : failSceneName));
+        }
+    }
+
+    private IEnumerator LoadResultSceneRoutine(string sceneName)
+    {
+        yield return new WaitForSeconds(sceneLoadDelay);
+        SceneManager.LoadScene(sceneName);
     }
 }
+
