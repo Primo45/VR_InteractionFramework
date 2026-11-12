@@ -5,28 +5,28 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_00_Launcher.unity
     guid: 3ff5f93fe2d56eb44af8231ef9fb066c
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_01_Login.unity
     guid: 0838f5846f1f71b428c55260cbbc87b6
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_02_Register.unity
     guid: 0f5dd748ada443a4cb5c45eba6482f4f
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_03_Tutorial.unity
     guid: eb0404fc282a6a54b96a91c74e242cbc
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_04_PatientInfo.unity
     guid: 26638ad5584b68a4094e2e98faa76f56
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_05_PhysicalExam.unity
     guid: 6abf6b667e2250a408f6edb07b4c38b9
   - enabled: 1
     path: Assets/_Scenes/Scene_06_SelectPingPong.unity
     guid: e84ef5a50cd9a4142a1a6040ea285ebc
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Scene_07_HealthAdvice.unity
     guid: c6fa51cf4406ea54fa1e5d4b849fd21c
   - enabled: 1
@@ -43,7 +43,7 @@ EditorBuildSettings:
     WebXR.Settings: {fileID: 11400000, guid: fe9659bb224bb054bb1dbca065d1d318, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 7c0d65f8139523c47a3ac0b1587ccdf6,
       type: 2}
-    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: bc87842975b39e54c9a8257bb65aef55,
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b392056c53f3b1945a8bee77b3c6d137,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 0765cc35504c54b1abdca214afed1317,
       type: 2}
